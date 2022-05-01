@@ -18,22 +18,43 @@ async function run() {
         await client.connect();
         const database = client.db("inventory").collection("stocks");
 
-        app.get('/inventory' , async (req , res)=>{
+        app.get('/inventory', async (req, res) => {
             const query = {};
             const cursor = database.find(query);
             const result = await cursor.toArray();
             res.send(result);
         })
 
-        app.get('/inventory/:id' , async (req , res)=>{
+        app.get('/inventory/:id', async (req, res) => {
             const id = req.params;
-            const query = { _id : ObjectId(id) };
+            const query = { _id: ObjectId(id) };
             const result = await database.findOne(query);
-            res.send(result);   
+            res.send(result);
         })
-     
+
+        app.delete('/inventory/:id', async (req, res) => {
+            const id = req.params;
+            const query = { _id: ObjectId(id) };
+            const result = await database.deleteOne(query);
+            res.send(result)
+        })
+
+        app.put('/inventory/:id', async (req, res) => {
+            const id = req.params;
+            const updatedProduct = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    quantity: updatedProduct.quantity
+                },
+            };
+            const result = await database.updateOne(filter, updateDoc, options);
+            res.send(result);
+        })
+
     } finally {
-        
+
     }
 }
 run().catch(console.dir);
