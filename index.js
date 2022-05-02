@@ -39,6 +39,13 @@ async function run() {
             res.send(result)
         })
 
+        app.post('/inventory', async (req, res) => {
+
+            const postdoc = req.body;
+            const result = await database.insertOne(postdoc);
+            res.send(result);
+        })
+
         app.put('/inventory/:id', async (req, res) => {
             const id = req.params;
             const updatedProduct = req.body;
