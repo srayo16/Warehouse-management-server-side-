@@ -25,6 +25,15 @@ async function run() {
             res.send(result);
         })
 
+        app.get('/addone', async (req, res) => {
+            const email = req.query.email;
+            // console.log(email);
+            const query = { email: email };
+            const cursor = database.find(query);
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
         app.get('/inventory/:id', async (req, res) => {
             const id = req.params;
             const query = { _id: ObjectId(id) };
@@ -40,7 +49,6 @@ async function run() {
         })
 
         app.post('/inventory', async (req, res) => {
-
             const postdoc = req.body;
             const result = await database.insertOne(postdoc);
             res.send(result);
