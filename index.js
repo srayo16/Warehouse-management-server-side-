@@ -34,6 +34,7 @@ async function run() {
     try {
         await client.connect();
         const database = client.db("inventory").collection("stocks");
+        const reviewCollection = client.db("inventory").collection("reviews");
 
 
         // AUTH
@@ -50,6 +51,13 @@ async function run() {
         app.get('/inventory', async (req, res) => {
             const query = {};
             const cursor = database.find(query);
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        app.get('/reviews', async (req, res) => {
+            const query = {};
+            const cursor = reviewCollection.find(query);
             const result = await cursor.toArray();
             res.send(result);
         })
